@@ -45,15 +45,15 @@ Typically MATLAB deals with this, but there are still come steps to follow befor
 
 ## Demonstrations:
 - **Amplification of a nanosecond pulse**  
-A long ~100-ns pulse is amplified. Due to its long duration and strong amplification, it exhibits transient gain effect, such that the temporal trailing edge experiences less gain than the leading edge.   
+A long ~100-ns pulse is amplified. Due to its long duration and strong amplification, it exhibits transient-gain effect, such that the temporal trailing edge experiences less gain than the leading edge.   
 Source: "For repetitive pulses (stochastic noise)/Examples/Tutorials/Transient-gain demonstration (ns pulse)"  
 <img src="Readme_images/ns_pulse.gif" width=80%>
 
 - **Burst-mode CPA**  
-A 10-pulse burst, each stretched to 500 ps from 400 fs, is amplified. Similar to aforementioned nanosecond-pulse amplification, it exhibits transient gain effect, such that the temporal trailing edge experiences less gain than the leading edge.   
+A 10-pulse burst, each stretched to 500 ps from 400 fs, is amplified. Similar to aforementioned nanosecond-pulse amplification, it exhibits transient-gain effect, such that the temporal trailing edge experiences less gain than the leading edge.   
 Source: "For repetitive pulses (stochastic noise)/Examples/Tutorials/Burst-mode CPA"  
 <img src="Readme_images/burst-mode_CPA.gif" width=80%>
 
 ## History:
-* 9/928/2025:<br>
+* 9/28/2025:<br>
 I kinda fixed bugs for periodic codes (`For repetitive pulses (stochastic noise)`). I assume '`For non-repetitive pulses (stochastic noise)` is still not working, which I'll fix in the future.
