@@ -63,8 +63,10 @@ function foutput = UPPE_propagate_with_adaptive(fiber, initial_condition, sim, g
 %
 %       Scaled Fourier transform -->
 %
-%           cs - scaled ratio (an integer) for narrowband transformation of the coherent fields.
-%                It must be a divisor of Nt.
+%           cs.cs - scaled ratio (an integer) for narrowband transformation.
+%                   It must be a divisor of Nt.
+%           cs.model - 1 = correct nonlinear phase modulation (for nonlinear phase accumulation in CPA, Raman gain suppression, etc.)
+%                      2 = correct nonlinear amplitude modulation (for Raman gain, etc.)
 %
 %       Others -->
 %
@@ -167,8 +169,8 @@ n2_prefactor = 1i*fiber.n2*(Omega+2*pi*sim.f0)/c; % m/W
 n2_prefactor = n2_prefactor.*sim.damped_freq_window;
 
 % Scaled nonlinearity due to the narrowband transformation (scaled Fourier transform)
-if sim.cs > 1
-    n2_prefactor = n2_prefactor/sim.cs;
+if sim.cs.cs > 1 && sim.cs.model == 1
+    n2_prefactor = n2_prefactor/sim.cs.cs;
 end
 
 %% Extend the time window for the acyclic-convolution operation
@@ -231,7 +233,7 @@ end
 %% Modified shot-noise for noise modeling
 At_noise = cell(1,num_windows);
 for window_i = 2:2:num_windows
-    At_noise{window_i} = shot_noise(gain_rate_eqn.acyclic_conv_stretch(Nt),dt(window_i),sim.f0,sim.cs);
+    At_noise{window_i} = shot_noise(gain_rate_eqn.acyclic_conv_stretch(Nt),dt(window_i),sim.f0,sim.cs.cs);
     At_noise{window_i}(Nt+1:end,:) = 0;
     
     if sim.gpu_yes

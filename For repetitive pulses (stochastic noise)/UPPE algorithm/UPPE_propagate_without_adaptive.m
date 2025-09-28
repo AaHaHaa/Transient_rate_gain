@@ -59,8 +59,10 @@ function foutput = UPPE_propagate_without_adaptive(fiber,initial_condition,sim,g
 %
 %       Scaled Fourier transform -->
 %
-%           cs - scaled ratio (an integer) for narrowband transformation.
-%                It must be a divisor of Nt.
+%           cs.cs - scaled ratio (an integer) for narrowband transformation.
+%                   It must be a divisor of Nt.
+%           cs.model - 1 = correct nonlinear phase modulation (for nonlinear phase accumulation in CPA, Raman gain suppression, etc.)
+%                      2 = correct nonlinear amplitude modulation (for Raman gain, etc.)
 %
 %       Others -->
 %
@@ -156,7 +158,7 @@ end
 
 %% the scaled factor of the scaled Fourier transform
 cs = dt/sim.incoherent.dt;
-cs(2:2:end) = sim.cs;
+cs(2:2:end) = sim.cs.cs;
 
 %% Pre-calculate the dispersion term
 % The "Omega" here is offset frequency (omega - omega0), omega: true angular frequency
@@ -187,8 +189,8 @@ n2_prefactor = 1i*fiber.n2*(Omega+2*pi*sim.f0)/c; % m/W
 n2_prefactor = n2_prefactor.*sim.damped_freq_window;
 
 % Scaled nonlinearity due to the narrowband transformation (scaled Fourier transform)
-if sim.cs > 1
-    n2_prefactor = n2_prefactor/sim.cs;
+if sim.cs.cs > 1 && sim.cs.model == 1
+    n2_prefactor = n2_prefactor/sim.cs.cs;
 end
 
 %% Extend the time window for the acyclic-convolution operation

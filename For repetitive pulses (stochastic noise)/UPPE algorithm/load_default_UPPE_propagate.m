@@ -37,7 +37,8 @@ function [fiber,sim] = load_default_UPPE_propagate( input_fiber,input_sim )
 %       sim.gpu_yes = true;
 %       sim.include_Raman = true;
 %
-%       sim.cs = 1;
+%       sim.cs.model = 1;
+%       sim.cs.cs = 1;
 %
 %       sim.pulse_centering = true;
 %       sim.gpuDevice.Index = 1;
@@ -160,8 +161,10 @@ function [fiber,sim] = load_default_UPPE_propagate( input_fiber,input_sim )
 %
 %       Scaled Fourier transform -->
 %
-%           cs - scaled ratio (an integer) for narrowband transformation of the coherent fields.
-%                It must be a divisor of Nt.
+%           cs.cs - scaled ratio (an integer) for narrowband transformation.
+%                   It must be a divisor of Nt.
+%           cs.model - 1 = correct nonlinear phase modulation (for nonlinear phase accumulation in CPA, Raman gain suppression, etc.)
+%                      2 = correct nonlinear amplitude modulation (for Raman gain, etc.)
 %
 %       Others -->
 %
@@ -275,7 +278,8 @@ default_sim.gpu_yes = true;
 default_sim.include_Raman = true; % consider Raman
 
 % Narrowband transformation (scaled Fourier transform)
-default_sim.cs = 1; % scaled factor
+default_sim.cs.cs = 1; % scaled factor
+default_sim.cs.model = 1; % correct phase accumulation
 
 % Others
 default_sim.pulse_centering = true; % center the pulse according to the time window

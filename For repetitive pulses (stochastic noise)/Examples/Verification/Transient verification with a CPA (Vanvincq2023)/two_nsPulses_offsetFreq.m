@@ -118,7 +118,7 @@ initial_condition(1) = prop_output_woPulse;
 initial_condition(2) = prop_output;
 
 %% Run the simulation
-prop_output = Transient_gain_UPPE_propagate(fiber, initial_condition, sim, gain_rate_eqn);
+prop_output = Periodic_transient_gain_UPPE_propagate(fiber, initial_condition, sim, gain_rate_eqn);
 
 %% Finish the simulation and save the data
 % Energy of the output field

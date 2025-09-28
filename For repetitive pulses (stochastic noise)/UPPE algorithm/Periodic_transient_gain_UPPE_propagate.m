@@ -50,13 +50,13 @@ UPPE_propgation_func = str2func(['UPPE_propagate_', adaptive_dz_str, '_adaptive'
 %% Apply the narrowband transformation (due to the scaled Fourier transform)
 scaledFT_func = narrowband_scaledFT();
 
-if sim.cs > 1
+if sim.cs.cs > 1
     num_windows = length(initial_condition);
     for window_i = 1:num_windows
-        initial_condition(window_i).dt = initial_condition(window_i).dt*sim.cs;
-        initial_condition(window_i).fields.forward = scaledFT_func.convert(initial_condition(window_i).fields.forward(:,:,end),sim.cs);
+        initial_condition(window_i).dt = initial_condition(window_i).dt*sim.cs.cs;
+        initial_condition(window_i).fields.forward = scaledFT_func.convert(initial_condition(window_i).fields.forward(:,:,end),sim.cs.cs);
         if isfield(initial_condition(window_i).fields,'backward')
-            initial_condition(window_i).fields.backward = scaledFT_func.convert(initial_condition(window_i).fields.backward(:,:,end),sim.cs);
+            initial_condition(window_i).fields.backward = scaledFT_func.convert(initial_condition(window_i).fields.backward(:,:,end),sim.cs.cs);
         end
     end
 end
@@ -65,20 +65,20 @@ end
 foutput = UPPE_propgation_func(fiber, initial_condition, sim, gain_rate_eqn);
 
 %% Recover from the narrowband transformation
-if sim.cs > 1
+if sim.cs.cs > 1
     for window_i = 1:num_windows
-        foutput(window_i).dt = foutput(window_i).dt/sim.cs;
+        foutput(window_i).dt = foutput(window_i).dt/sim.cs.cs;
         if ~isempty(foutput(window_i).fields.forward) % In simulations without ASE, its window contains no field, which we skip here.
-            foutput(window_i).fields.forward = scaledFT_recover_field(scaledFT_func,foutput(window_i).fields.forward,sim.cs);
+            foutput(window_i).fields.forward = scaledFT_recover_field(scaledFT_func,foutput(window_i).fields.forward,sim.cs.cs);
         end
         if isfield(foutput(window_i).fields,'backward') % Only simulations with ASE has backward fields.
             if ~isempty(foutput(window_i).fields.backward) % Just a careful check, but this line should be removable.
-                foutput(window_i).fields.backward = scaledFT_recover_field(scaledFT_func,foutput(window_i).fields.backward,sim.cs);
+                foutput(window_i).fields.backward = scaledFT_recover_field(scaledFT_func,foutput(window_i).fields.backward,sim.cs.cs);
             end
         end
 
         % Recover populations
-        foutput(window_i).population = scaledFT_recover_population(foutput(window_i).population,sim.cs);
+        foutput(window_i).population = scaledFT_recover_population(foutput(window_i).population,sim.cs.cs);
     end
 end
 

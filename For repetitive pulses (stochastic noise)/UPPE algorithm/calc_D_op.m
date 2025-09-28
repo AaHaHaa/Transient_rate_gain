@@ -5,9 +5,9 @@ function [D_op,sim] = calc_D_op(fiber,sim,Nt,dt,Omega,fields)
 % fields are downsampled in Transient_gain_UPPE_propagate() already. If
 % fiber.betas is a function of frequency, it will then contain too many
 % points. Its downsampling operation is applied below.
-if sim.cs > 1
+if sim.cs.cs > 1
     if any(size(fiber.betas) >= Nt)
-        fiber.betas = fiber.betas(1:sim.cs:end,:);
+        fiber.betas = fiber.betas(1:sim.cs.cs:end,:);
     end
 end
 
@@ -76,8 +76,8 @@ else
 end
 
 % Scaled dispersion due to the narrowband transformation (scaled Fourier transform)
-if sim.cs > 1
-    D_op = D_op/sim.cs;
+if sim.cs.cs > 1
+    D_op = D_op/sim.cs.cs;
 end
 
 end

@@ -9,16 +9,17 @@ end
 
 %%
 function run_GMNA(DT)
+% DT: pulse separation; ps
 
 addpath('../../../UPPE algorithm/','../../../user_helpers/');
 
 %% Setup fiber parameterss
 % Please find details of all the parameters in "load_default_UPPE_propagate.m".
 % Only necessary parameters are set here; otherwise, defaults are used.
-sim.lambda0 = 1080e-9;
-sim.f0 = 2.99792458e-4/sim.lambda0;
-%sim.gpu_yes = false;
-sim.save_period = 0.1;
+sim.lambda0 = 1080e-9; % m; center wavelength
+sim.f0 = 2.99792458e-4/sim.lambda0; % THz; center frequency
+sim.gpu_yes = false; % don't use GPU
+sim.save_period = 0.1; % m
 sim.gpuDevice.Index = 1;
 
 % -------------------------------------------------------------------------
@@ -93,7 +94,6 @@ pulse_lambda0 = 1025e-9;
 f_now = c/sim.lambda0*1e-12;
 f_pulse = c/pulse_lambda0*1e-12;
 freq_shift = f_pulse - f_now;
-%DT = 7; % pulse separation; ps
 energy_coeff = linspace(1,1,num_pulses); % equal energy among pulses
 prop_output = build_MMgaussian(tfwhm, time_window, total_energy*sum(energy_coeff)/num_pulses, num_pulses, Nt, {'ifft',freq_shift}, sqrt(energy_coeff), (-floor(num_pulses/2):ceil(num_pulses/2)-1)*DT);
 prop_output.fields = struct('forward', sum(prop_output.fields,2),...

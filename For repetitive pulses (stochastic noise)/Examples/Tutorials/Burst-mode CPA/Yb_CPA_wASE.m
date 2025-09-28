@@ -1,7 +1,13 @@
-% This code plots the schematic of transient rate-gain model.
+% This code runs the burst-mode CPA with the transient gain.
 %
-% ASE is excluded:
-%   gain_rate_eqn.ignore_ASE = true
+% Narrowband transformation is applied not only to the incoherent-field 
+% window but also to the coherent-field one here to speed up the CPA
+% simulation.
+%
+% ASE is included:
+%   (1) gain_rate_eqn.ignore_ASE = false
+%   (2) sim.incoherent needs to be supplied for incoherent-field windows, 
+%       which is then passed into gain_info to compute some parameters to save in gain_rate_eqn.
 
 close all; clearvars;
 
@@ -10,15 +16,17 @@ addpath('../../../UPPE algorithm/','../../../user_helpers/');
 %% Setup fiber parameterss
 % Please find details of all the parameters in "load_default_UPPE_propagate.m".
 % Only necessary parameters are set here; otherwise, defaults are used.
-sim.lambda0 = 1030e-9;
-sim.f0 = 2.99792458e-4/sim.lambda0;
-%sim.gpu_yes = false;
-sim.save_period = 0.01;
+sim.lambda0 = 1030e-9; % m; center wavelength
+sim.f0 = 2.99792458e-4/sim.lambda0; % THz; center frequency
+sim.gpu_yes = false; % don't use GPU
+sim.save_period = 0.01; % m
+sim.include_Raman = false; % don't consider Raman to avoid aliasing since the frequency used here might not be huge enough
+sim.dz = 1e-3; % m; propagating step size
 
 % -------------------------------------------------------------------------
 
 % Gain fiber
-sim.gain_model = 2;
+sim.gain_model = 2; % use rate-equation gain
 sim.progress_bar_name = 'Gain';
 fiber.L0 = 1; % m; fiber length
 fiber.MFD = 6; % um; mode-field diameter
@@ -42,9 +50,9 @@ gain_rate_eqn.core_NA = 0.12;
 gain_rate_eqn.absorption_wavelength_to_get_N_total = 920; % nm
 gain_rate_eqn.absorption_to_get_N_total = 0.55; % dB/m
 gain_rate_eqn.pump_wavelength = 976; % nm
-gain_rate_eqn.copump_power = 10; % W
+gain_rate_eqn.copump_power = 3; % W
 gain_rate_eqn.counterpump_power = 0; % W
-gain_rate_eqn.ignore_ASE = true;
+gain_rate_eqn.ignore_ASE = false;
 gain_rate_eqn.sponASE_spatial_modes = []; % In LMA fibers, the number of ASE modes can be larger than one as the signal field, so this factor is used to correctly considered ASE. If empty like [], it's length(sim.midx).
 gain_rate_eqn.max_iterations = 2; % If there is ASE, iterations are required.
 gain_rate_eqn.tol = 1e-5; % the tolerance for the above iterations
@@ -59,14 +67,23 @@ t = (-Nt/2:Nt/2-1)'*dt; % ps
 c = 299792458; % m/s
 lambda = c./(f*1e12)*1e9; % nm
 
+sim.incoherent.dt = dt/3;
+incoherent_lambda0 = 1070e-9; % m
+sim.incoherent.f0 = 2.99792458e-4/incoherent_lambda0;
+incoherent_f = sim.incoherent.f0+(-Nt/2:Nt/2-1)'/(Nt*sim.incoherent.dt); % THz
+incoherent_lambda = c./(incoherent_f*1e12)*1e9; % nm
+
 % Precompute some parameters related to the gain to save the computational time
 % Check "gain_info.m" for details.
-sim.cs = 8; % apply narrowband transformation for the coherent field to speed up the simulation
-gain_rate_eqn = gain_info( sim,gain_rate_eqn,{ifftshift(lambda,1),ifftshift(lambda,1)} );
+sim.cs.cs = 8; % apply narrowband transformation for the coherent field to speed up the simulation
+gain_rate_eqn = gain_info( sim,gain_rate_eqn,{ifftshift(incoherent_lambda,1),ifftshift(lambda,1)} );
 
 %% calculate fiber betas from silica refractive index
 % This is important to correctly simulate the broadband situations.
 % Taylor-series coefficients is only good in narrowband situations.
+%
+% (We don't need this for the current narrowband CPA simulation. It's 
+% overkill, but it's always good to use the most accurate one.)
 
 % Sellmeier coefficients
 material = 'fused silica';
@@ -127,4 +144,4 @@ end
 prop_output = Periodic_transient_gain_UPPE_propagate(fiber, initial_condition, sim, gain_rate_eqn);
 
 %% Finish the simulation and save the data
-save('Yb_CPA_woASE.mat','-v7.3');
+save('Yb_CPA_wASE.mat','-v7.3');

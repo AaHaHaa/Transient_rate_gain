@@ -125,7 +125,7 @@ prop_output = initial_condition;
 last_rt = 20;
 last_energy = zeros(last_rt,1);
 for i = 1:last_rt
-    prop_output = Transient_gain_UPPE_propagate(fiber, prop_output, sim, gain_rate_eqn);
+    prop_output = Periodic_transient_gain_UPPE_propagate(fiber, prop_output, sim, gain_rate_eqn);
 
     last_energy(i) = sum(abs(prop_output(end).fields.forward(:,:,end)).^2)*prop_output(end).dt/1e3;
     disp(last_energy(i));

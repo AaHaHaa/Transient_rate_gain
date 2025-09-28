@@ -9,12 +9,11 @@ num_pulses = 10;
 %% Setup fiber parameterss
 % Please find details of all the parameters in "load_default_UPPE_propagate.m".
 % Only necessary parameters are set here; otherwise, defaults are used.
-sim.lambda0 = 1080e-9;
-sim.f0 = 2.99792458e-4/sim.lambda0;
-sim.gpu_yes = false;
-sim.save_period = 0.1;
+sim.lambda0 = 1080e-9; % m; center wavelength
+sim.f0 = 2.99792458e-4/sim.lambda0; % THz; center frequency
+sim.gpu_yes = false; % don't use GPU
+sim.save_period = 0.1; % m
 sim.gpuDevice.Index = 1;
-%sim.pulse_centering = false;
 
 % -------------------------------------------------------------------------
 
@@ -112,7 +111,7 @@ end
 
 
 %% Run the simulation
-prop_output = Transient_gain_UPPE_propagate(fiber, initial_condition, sim, gain_rate_eqn);
+prop_output = Periodic_transient_gain_UPPE_propagate(fiber, initial_condition, sim, gain_rate_eqn);
 
 %% Finish the simulation and save the data
 % Energy of the output field

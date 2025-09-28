@@ -7,6 +7,8 @@
 %    50 pulses, use 4.3 W.
 %   100 pulses, use 7.7 W.
 %   200 pulses, use  17 W.
+%
+% For more than 50 pulses, please turn on GPU with "sim.gpu_yes = true".
 
 close all; clearvars;
 
@@ -17,10 +19,10 @@ num_pulses = 4;
 %% Setup fiber parameterss
 % Please find details of all the parameters in "load_default_UPPE_propagate.m".
 % Only necessary parameters are set here; otherwise, defaults are used.
-sim.lambda0 = 1080e-9;
-sim.f0 = 2.99792458e-4/sim.lambda0;
-%sim.gpu_yes = false;
-sim.save_period = 0.1;
+sim.lambda0 = 1080e-9; % m; center wavelength
+sim.f0 = 2.99792458e-4/sim.lambda0; % THz; center frequency
+sim.gpu_yes = false; % don't use GPU
+sim.save_period = 0.1; % m
 sim.gpuDevice.Index = 1;
 
 % -------------------------------------------------------------------------
@@ -100,7 +102,7 @@ pulse_lambda0 = 1025e-9;
 f_now = c/sim.lambda0*1e-12;
 f_pulse = c/pulse_lambda0*1e-12;
 freq_shift = f_pulse - f_now;
-DT = 7; % ps
+DT = 7; % pulse separation; ps
 energy_coeff = linspace(1,1,num_pulses);
 prop_output = build_MMgaussian(tfwhm, time_window, total_energy*sum(energy_coeff)/num_pulses, num_pulses, Nt, {'ifft',freq_shift}, sqrt(energy_coeff), (-floor(num_pulses/2):ceil(num_pulses/2)-1)*DT);
 prop_output.fields = struct('forward', sum(prop_output.fields,2),...
@@ -114,7 +116,7 @@ initial_condition(1) = prop_output_woPulse;
 initial_condition(2) = prop_output;
 
 %% Run the simulation
-prop_output = Transient_gain_UPPE_propagate(fiber, initial_condition, sim, gain_rate_eqn);
+prop_output = Periodic_transient_gain_UPPE_propagate(fiber, initial_condition, sim, gain_rate_eqn);
 
 %% Finish the simulation and save the data
 % Energy of the output field

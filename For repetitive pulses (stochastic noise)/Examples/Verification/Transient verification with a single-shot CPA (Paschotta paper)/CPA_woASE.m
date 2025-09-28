@@ -66,7 +66,7 @@ lambda = c./(f*1e12)*1e9; % nm
 
 % Precompute some parameters related to the gain to save the computational time
 % Check "gain_info.m" for details.
-sim.cs = 8;
+sim.cs.cs = 8; % scaled factor for the coherent field
 gain_rate_eqn = gain_info( sim,gain_rate_eqn,{ifftshift(lambda,1),ifftshift(lambda,1)} );
 
 gain_rate_eqn.N.MPA.max_iter = 50;
@@ -117,7 +117,7 @@ initial_condition(1) = prop_output_woPulse;
 initial_condition(2) = prop_output;
 
 %% Run the simulation
-prop_output = Transient_gain_UPPE_propagate(fiber, initial_condition, sim, gain_rate_eqn);
+prop_output = Periodic_transient_gain_UPPE_propagate(fiber, initial_condition, sim, gain_rate_eqn);
 
 %% Finish the simulation and save the data
 % Energy of the output field
@@ -125,4 +125,4 @@ energy = squeeze(sum(trapz(abs(prop_output(2).fields.forward).^2,1),2)*prop_outp
 
 t_woPulse = (-Nt/2:Nt/2-1)'*prop_output_woPulse.dt; % ps
 
-save('transient2.mat');
+save('transient.mat');

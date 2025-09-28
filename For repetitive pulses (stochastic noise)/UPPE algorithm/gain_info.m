@@ -111,9 +111,9 @@ end
 
 %% Narrowband transformation of the coherent fields due to the scaled Fourier transform
 % lambda needs to be re-defined
-if sim.cs > 1
+if sim.cs.cs > 1
     for window_i = 1:2
-        lambda{window_i} = lambda{window_i}(1:sim.cs:end);
+        lambda{window_i} = lambda{window_i}(1:sim.cs.cs:end);
     end
 end
 

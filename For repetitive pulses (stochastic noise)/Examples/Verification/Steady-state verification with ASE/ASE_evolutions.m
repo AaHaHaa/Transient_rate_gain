@@ -7,20 +7,20 @@ addpath('../../../UPPE algorithm/','../../../user_helpers/');
 %% Setup fiber parameterss
 % Please find details of all the parameters in "load_default_UPPE_propagate.m".
 % Only necessary parameters are set here; otherwise, defaults are used.
-sim.lambda0 = 1030e-9;
-sim.f0 = 2.99792458e-4/sim.lambda0;
-sim.gpu_yes = false;
-sim.pulse_centering = false;
-fiber.n2 = 0;
+sim.lambda0 = 1030e-9; % m; center wavelength
+sim.f0 = 2.99792458e-4/sim.lambda0; % THz; center frequency
+sim.gpu_yes = false; % don't use GPU
+sim.pulse_centering = false; % don't center the pulse w.r.t. the time window
+fiber.n2 = 0; % ignore n2 in this ASE modeling
 
 % -------------------------------------------------------------------------
 
 % Gain fiber
 sim.progress_bar_name = 'Gain (6um)';
 fiber.L0 = 10; % m; fiber length
-sim.dz = 0.01;
+sim.dz = 0.01; % m; step size
 save_num = 50; % the number of saved data
-sim.save_period = fiber.L0/save_num;
+sim.save_period = fiber.L0/save_num; % m
 
 % Load default parameters like 
 %
@@ -106,7 +106,7 @@ initial_condition(1) = prop_output_woPulse;
 initial_condition(2) = prop_output;
 
 %% Run the simulation
-prop_output = Transient_gain_UPPE_propagate(fiber, initial_condition, sim, gain_rate_eqn);
+prop_output = Periodic_transient_gain_UPPE_propagate(fiber, initial_condition, sim, gain_rate_eqn);
 
 %% Plot results
 ASE = struct('forward', squeeze(mean(abs(prop_output(1).fields.forward).^2,1))*1e3,... % mW

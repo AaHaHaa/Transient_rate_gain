@@ -7,10 +7,10 @@ addpath('../../../UPPE algorithm/','../../../user_helpers/');
 %% Setup fiber parameterss
 % Please find details of all the parameters in "load_default_UPPE_propagate.m".
 % Only necessary parameters are set here; otherwise, defaults are used.
-sim.lambda0 = 1030e-9;
-sim.f0 = 2.99792458e-4/sim.lambda0;
-%sim.gpu_yes = false;
-sim.save_period = 0;
+sim.lambda0 = 1030e-9; % m; center wavelength
+sim.f0 = 2.99792458e-4/sim.lambda0; % THz; center frequency
+sim.gpu_yes = false; % don't use GPU
+sim.save_period = 0; % m; 0 means saving only the output field
 sim.dz = 1e-3; % m
 
 % -------------------------------------------------------------------------
@@ -113,7 +113,7 @@ initial_condition(1) = prop_output_woPulse;
 initial_condition(2) = prop_output;
 
 %% Run the simulation
-prop_output = Transient_gain_UPPE_propagate(fiber, initial_condition, sim, gain_rate_eqn);
+prop_output = Periodic_transient_gain_UPPE_propagate(fiber, initial_condition, sim, gain_rate_eqn);
 
 %% Finish the simulation and save the data
 t_woPulse = (-Nt/2:Nt/2-1)'*prop_output_woPulse.dt; % ps

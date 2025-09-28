@@ -24,6 +24,7 @@ sim.lambda0 = 1030e-9;
 sim.f0 = 2.99792458e-4/sim.lambda0;
 sim.gpu_yes = false;
 sim.save_period = 0.01;
+sim.include_Raman = false; % don't consider Raman in a small frequency window we use here; otherwise, there will be aliasing
 
 % -------------------------------------------------------------------------
 
@@ -61,7 +62,7 @@ gain_rate_eqn.tol = 1e-5; % the tolerance for the above iterations
 gain_rate_eqn.verbose = false; % show the information(final pulse energy) during iterations of computing the gain
 
 %% Setup general parameters
-Nt = 2^7; % the number of time points
+Nt = 2^9; % the number of time points
 time_window = 500e3; % ps
 dt = time_window/Nt;
 f = sim.f0+(-Nt/2:Nt/2-1)'/(Nt*dt); % THz
@@ -92,7 +93,7 @@ fiber.betas = n_silica*2*pi./(lambda*1e-9);
 rep_rate = 100e3; % Hz
 
 tfwhm = 100e3; % ps
-total_energy = 1e3; % nJ
+total_energy = 100; % nJ
 
 pulse_lambda0 = 1030e-9;
 f_now = c/sim.lambda0*1e-12;
@@ -111,7 +112,7 @@ initial_condition(1) = prop_output_woPulse;
 initial_condition(2) = prop_output;
 
 %% Run the simulation
-prop_output = Transient_gain_UPPE_propagate(fiber, initial_condition, sim, gain_rate_eqn);
+prop_output = Periodic_transient_gain_UPPE_propagate(fiber, initial_condition, sim, gain_rate_eqn);
 
 %% Finish the simulation and save the data
 % Energy of the output field
