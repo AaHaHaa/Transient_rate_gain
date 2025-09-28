@@ -45,7 +45,7 @@ Typically MATLAB deals with this, but there are still come steps to follow befor
 
 ## Demonstrations:
 - **Amplification of a nanosecond pulse**  
-A long 100-ns pulse is amplified. Due to its long duration and strong amplification, it exhibits transient gain effect, such that the temporal trailing edge experiences less gain than the leading edge.   
+A long ~100-ns pulse is amplified. Due to its long duration and strong amplification, it exhibits transient gain effect, such that the temporal trailing edge experiences less gain than the leading edge.   
 Source: "For repetitive pulses (stochastic noise)/Examples/Tutorials/Transient-gain demonstration (ns pulse)"  
 <img src="Readme_images/ns_pulse.gif" width=80%>
 
