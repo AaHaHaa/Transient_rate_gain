@@ -1,7 +1,7 @@
 # Transient_rate_gain
- This is the shared package to simulate pulse propagation in a fiber with UPPE.
+ This is the shared package to simulate pulse propagation in a (solid-core) fiber amplifier with UPPE incorporated with the transient rate-equation gain.
 
-It solves the transient gain based on realistic rate equations.
+ This is by far the fastest and memory-saving transient-gain model in the world due to the field-based treatment.
 
 > [!NOTE]
 > I've been modifying the code to make it user-friendly since it was written for our Optica paper. Hence, the paper example codes might fail due to a changed coding format or function name. I'll fix them soon, but it'll take some time. If users want to try the code before I'm done, in principle, users can fix the bugs themselves with the help of readme.pdf in the /Documentation folder.
@@ -53,6 +53,11 @@ Source: "For repetitive pulses (stochastic noise)/Examples/Tutorials/Transient-g
 A 10-pulse burst, each stretched to 500 ps from 400 fs, is amplified. Similar to aforementioned nanosecond-pulse amplification, it exhibits transient-gain effect, such that the temporal trailing edge experiences less gain than the leading edge.   
 Source: "For repetitive pulses (stochastic noise)/Examples/Tutorials/Burst-mode CPA"  
 <img src="Readme_images/burst-mode_CPA.gif" width=80%>
+
+- **Burst-mode GMNA**  
+A 100-pulse burst is amplified into the gain-managed regime (GMNA) [[1]](#references-our-papers). Only our field-based model can capture their spectrotemporal evolutions due to a frequency-shifting gain spectrum in different temporal slices of the fields. Similar to aforementioned nanosecond-pulse amplification, it exhibits transient-gain effect, such that the temporal trailing edge experiences less gain than the leading edge. We can see that the pulses at the trailing edge is slightly more narrowband than those at the leading edge. Since the phase in GMNA is generated nonlinearly, pulses in this burst have different phases and thus cannot be uniformly dechirped.   
+Source: "For repetitive pulses (stochastic noise)/Examples/Tutorials/Burst-mode GMNA"  
+<img src="Readme_images/burst-mode_GMNA_spectrogram.jpg" width=50%>
 
 ## History:
 * 9/28/2025:<br>
