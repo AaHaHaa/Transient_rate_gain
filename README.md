@@ -1,7 +1,7 @@
 # Transient_rate_gain
  This is the shared package to simulate pulse propagation in a (solid-core) fiber amplifier with UPPE incorporated with the transient rate-equation gain.
 
- This is by far the fastest and memory-saving transient-gain model in the world due to the field-based treatment.
+ This is by far the fastest and most memory-saving transient-gain model in the world due to the field-based treatment [[1]](#references-our-papers).
 
 > [!NOTE]
 > I've been modifying the code to make it user-friendly since it was written for our Optica paper. Hence, the paper example codes might fail due to a changed coding format or function name. I'll fix them soon, but it'll take some time. If users want to try the code before I'm done, in principle, users can fix the bugs themselves with the help of readme.pdf in the /Documentation folder.
@@ -25,6 +25,7 @@
    - Rate-equation model supports `Nd`, `Yb`, `Er`, `Tm`, `Ho`. For more details, see `readme.pdf`.
 7. Support noise-seeded processes, such as spontaneous Raman scattering, with [the newly-developed noise model](https://doi.org/10.48550/arXiv.2410.20567).
 8. Support GPU modeling. It is controlled by `sim.gpu_yes=true/false`.
+9. Support narrowband transformation based on the newly-proposed scaled Fourier transform to speed up modeling such as a CPA [[1]](#references-our-papers).
 
 ## Fourier-Transform tutorial
 Since I've seen many misuse of Fourier Transform, I wrote [this tutorial](https://doi.org/10.48550/arXiv.2412.20698). Please take a look. Briefly speaking for one misuse, it's necessary to use MATLAB's `ifft` for Fourier Transform into the spectral domain.
