@@ -1,5 +1,8 @@
 % This code runs the burst-mode CPA with the transient gain.
 %
+% Because pulses are widely separated in time, this code runs with multiple
+% time windows, alternating between incoherent- and coherent-field windows.
+%
 % Narrowband transformation is applied not only to the incoherent-field 
 % window but also to the coherent-field one here to speed up the CPA
 % simulation.

@@ -95,7 +95,7 @@ for j = 1:save_point
     hold off;
     xlabel('Time (µs)')
     ylabel('Power (norm.)');
-    set(gca,'YColor',[0.8510,0.3255,0.0980]);
+    set(gca,'YColor',[0.8510,0.3255,0.0980],'fontsize',12);
 
     inset_fig = findobj(ifig,'Type','axes');
     h_inset = copyobj(inset_fig,fig);
@@ -124,10 +124,9 @@ for j = 1:save_point
             plot([last_t_end;this_t]/1e6,[prop_output(i-1).population(end,:,j);prop_output(i).population(:,:,j)]*100,'Color','b','LineStyle','-','Marker','None','linewidth',2);
         end
         hold on;
-        hold on;
     end
     hold off;
-    set(gca,'fontsize',12,'YColor','b','YAxisLocation','Right','Color','None');
+    set(gca,'fontsize',12,'YColor','b','YAxisLocation','Right','Color','None','XTick',[]);
     xlabel('');
     ylim([min(prop_output(1).population(:,:,j)),max(prop_output(2).population(:,:,j))]*100);
     ylabel('N_1 (%)');
@@ -156,6 +155,8 @@ for j = 1:save_point
     text(0.33,0.74,'out','FontSize',20,'Units','Normalized');
     text(0.4,0.88,['\Delta N_1=',sprintf('%5.4f',abs(diff([min(prop_output(1).population(:,:,j),[],1),max(prop_output(1).population(:,:,j),[],1)]*100))),'%'],'FontSize',20,'Units','Normalized','Color','b');
 
+    set(gcf,'Color','w');
+    
     Frame(j) = getframe(fig);
 
     % Delete the inset for the next inset to plot on this figure
