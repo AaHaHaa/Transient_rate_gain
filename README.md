@@ -58,6 +58,7 @@ Source: "For repetitive pulses (stochastic noise)/Examples/Tutorials/Burst-mode 
 A 100-pulse burst is amplified into the gain-managed nonlinear regime (GMNA) [[1]](#references-our-papers). Only our field-based model can capture their spectrotemporal evolutions exhibiting a frequency-shifting gain spectrum, also with different gains, in different temporal slices of the fields due to the transient-gain effect. Pulses at the trailing edge is slightly more narrowband than those at the leading edge (spectrogram plotted below ignores temporal interference for visualization purpose). Since the phase in GMNA is generated nonlinearly, pulses in this burst have different phases and thus cannot be uniformly dechirped.   
 Source: "For repetitive pulses (stochastic noise)/Examples/Tutorials/Burst-mode GMNA"  
 <img src="Readme_images/burst_mode_GMNA_spectrogram.jpg" width=50%>
+<img src="Readme_images/burst_mode_GMNA_spectrogram_closeview.jpg" width=50%>
 
 ## History:
 * 9/28/2025:<br>
