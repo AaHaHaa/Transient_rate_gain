@@ -24,7 +24,7 @@ function [Strehl_ratio,dechirped_FWHM,transform_limited_FWHM,peak_power,fig] = a
 %   Required arguments for prism compressor:
 %
 %      alpha: the apex angle of prisms in a prism compressor (rad)
-%      prism_material: material in Sellmeier_coefficients.m in UPPE_algorithm/
+%      prism_material: material in Sellmeier_coefficients.m in GMMNLSE_algorithm/
 %
 %   Extra required arguments for the Offner compressor:
 %
@@ -178,7 +178,7 @@ while increase_sampling
 
     field_f = ifft(field);
     field_f = cat(1,field_f(1:ceil(Nt/2),:),zeros(Nt*num_interp,1),field_f(ceil(Nt/2)+1:end,:));
-    f_interp = (-floor(Nt/2):floor((Nt-1)/2))'/(Nt*dt) + f(floor(Nt/2)+1);
+    f_interp = (-floor(Nt/2):ceil(Nt/2)-1)'/(Nt*dt) + f(floor(Nt/2)+1);
     field_interp = fft(field_f);
     
     [transform_limited_field,~,transform_limited_FWHM,pulse_FWHM] = calc_transform_limited( field_interp,0,t_interp );
@@ -192,15 +192,15 @@ end
 % Dechirp the pulse
 switch compressor_type
     case 'prism'
-        [~,dechirped_FWHM,dechirped_field] = pulse_compressor(compressor_type,                    [],feval(@(x)x(1),ifftshift(c./f_interp,1)),t_interp,field_interp,alpha,prism_material,false,global_opt);
+        [~,dechirped_FWHM,dechirped_field] = pulse_compressor(compressor_type,                    [],feval(@(x)x(1),ifftshift(c./f_interp,1)),t_interp,field_interp,alpha,prism_material,false,global_opt,false);
     case {'grism1','grism2'}
-        [~,dechirped_FWHM,dechirped_field] = pulse_compressor(compressor_type,grating_incident_angle,feval(@(x)x(1),ifftshift(c./f_interp,1)),t_interp,field_interp,grating_spacing,alpha,prism_material,false,global_opt,-1);
+        [~,dechirped_FWHM,dechirped_field] = pulse_compressor(compressor_type,grating_incident_angle,feval(@(x)x(1),ifftshift(c./f_interp,1)),t_interp,field_interp,grating_spacing,alpha,prism_material,false,global_opt,false,-1);
     case {'Treacy-t','Treacy-r','Treacy-beta2'}
-        [~,dechirped_FWHM,dechirped_field] = pulse_compressor(compressor_type,grating_incident_angle,feval(@(x)x(1),ifftshift(c./f_interp,1)),t_interp,field_interp,grating_spacing,false,global_opt,-1);
+        [~,dechirped_FWHM,dechirped_field] = pulse_compressor(compressor_type,grating_incident_angle,feval(@(x)x(1),ifftshift(c./f_interp,1)),t_interp,field_interp,grating_spacing,false,global_opt,false,-1);
     case 'Offner1'
-        [~,dechirped_FWHM,dechirped_field] = pulse_compressor(compressor_type,grating_incident_angle,feval(@(x)x(1),ifftshift(c./f_interp,1)),t_interp,field_interp,grating_spacing,R,false,global_opt,-1);
+        [~,dechirped_FWHM,dechirped_field] = pulse_compressor(compressor_type,grating_incident_angle,feval(@(x)x(1),ifftshift(c./f_interp,1)),t_interp,field_interp,grating_spacing,R,false,global_opt,false,-1);
     case 'Offner2'
-        [~,dechirped_FWHM,dechirped_field] = pulse_compressor(compressor_type,grating_incident_angle,feval(@(x)x(1),ifftshift(c./f_interp,1)),t_interp,field_interp,grating_spacing,R,offcenter,false,global_opt,-1);
+        [~,dechirped_FWHM,dechirped_field] = pulse_compressor(compressor_type,grating_incident_angle,feval(@(x)x(1),ifftshift(c./f_interp,1)),t_interp,field_interp,grating_spacing,R,offcenter,false,global_opt,false,-1);
 end
 
 % -------------------------------------------------------------------------
@@ -286,7 +286,7 @@ if verbose && ~isempty(ASE)
     plot(299792.458./f(f>0),spectrum(f>0).*factor(f>0),'b','linewidth',2); hold off;
     l = legend('Pulse+ASE','Pulse'); set(l,'fontsize',16);
     xlabel('Wavelength (nm)');
-    ylabel('Spectrum (nJ/nm)');
+    ylabel('PSD (nJ/nm)');
     xlim([min(299792.458./f(f>0)),max(299792.458./f(f>0))]);
     set(gca,'fontsize',16);
 end
