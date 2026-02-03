@@ -11,7 +11,12 @@ close all; clearvars;
 
 addpath('../../../UPPE algorithm/','../../../user_helpers/');
 
-num_pulses = 6;
+num_pulses = 6; % this sets the number of "roundtrip" in regen,
+                % because we're using the "periodic" code to mimic and
+                % sovle the regen's "steady state" with a burst-mode
+                % state.
+                % To solve the regen's transient evolution, you must use
+                % the other non-periodic code.
 
 %% Setup fiber parameterss
 % Please find details of all the parameters in "load_default_UPPE_propagate.m".
@@ -130,6 +135,11 @@ for i = 1:last_rt
     last_energy(i) = sum(abs(prop_output(end).fields.forward(:,:,end)).^2)*prop_output(end).dt/1e3;
     disp(last_energy(i));
 
+    % Shift the pulse one step backward such that
+    % the 2nd pulse is the amplified version of the 1st pulse
+    % the 3nd pulse is the amplified version of the 2st pulse
+    % and so on......
+    % If the system reaches the steady state, it is the "regen".
     if i < last_rt
         for window_i = num_pulses*2:-2:4
             prop_output(window_i).fields.forward = prop_output(window_i-2).fields.forward(:,:,end);
